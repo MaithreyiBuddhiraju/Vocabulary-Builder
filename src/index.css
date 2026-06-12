@@ -1,0 +1,46 @@
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+::selection {
+  background: rgba(138, 58, 46, 0.18);
+}
+button {
+  font: inherit;
+}
+
+/* audio pronunciation button */
+.spk-btn:hover {
+  transform: translateY(-1px);
+}
+.spk-btn:active {
+  transform: scale(0.92);
+}
+.spk-w1,
+.spk-w2 {
+  transform-origin: center;
+  opacity: 0.9;
+}
+.spk-playing .spk-w1 {
+  animation: spkpulse 0.7s ease-in-out infinite;
+}
+.spk-playing .spk-w2 {
+  animation: spkpulse 0.7s ease-in-out infinite 0.15s;
+}
+@keyframes spkpulse {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}

@@ -1,25 +1,30 @@
-# CODING AGENTS: READ THIS FIRST
+# Lexicon — Vocabulary Game
 
-This is a **handoff bundle** from Claude Design (claude.ai/design).
+An interactive game for building a GRE-level vocabulary. 132 curated words — a mix
+of GRE staples (*perfidious*, *obsequious*, *recalcitrant*) and arcane gems
+(*defenestrate*, *petrichor*, *ultracrepidarian*) — each with meaning, etymology,
+a usage sentence, phonetic pronunciation, synonyms/antonyms, and tap-to-hear audio.
 
-A user mocked up designs in HTML/CSS/JS using an AI design tool, then exported this bundle so a coding agent can implement the designs for real.
+## Modes
 
-## What you should do — IMPORTANT
+- **Daily** — three fresh words each day (deterministic by date, stable across reloads), fully expanded.
+- **Library** — tap any word to unfold its details inline. Filter by New / Learning / Mastered / GRE / Arcane.
+- **Quiz** — multiple-choice sessions (alternating "pick the meaning" / "pick the word") with points,
+  combo bonuses, and spaced repetition: missed words resurface within the session, and the shakiest
+  words lead the next one. Sessions are capped at 15 words, with today's daily words up front.
 
-**Read the chat transcripts first.** There are 1 chat transcript(s) in `chats/`. The transcripts show the full back-and-forth between the user and the design assistant — they tell you **what the user actually wants** and **where they landed** after iterating. Don't skip them. The final HTML files are the output, but the chat is where the intent lives.
+Progress (new → learning → mastered), points, and a day-streak persist in `localStorage`.
+Audio pronunciation uses the browser's built-in speech synthesis — no setup, works offline.
 
-**Read `project/Vocabulary Game.html` in full.** The user had this file open when they triggered the handoff, so it's almost certainly the primary design they want built. Read it top to bottom — don't skim. Then **follow its imports**: open every file it pulls in (shared components, CSS, scripts) so you understand how the pieces fit together before you start implementing.
+## Development
 
-**If anything is ambiguous, ask the user to confirm before you start implementing.** It's much cheaper to clarify scope up front than to build the wrong thing.
+```sh
+npm install
+npm run dev      # local dev server
+npm run build    # production build to dist/
+npm run preview  # serve the production build
+```
 
-## About the design files
-
-The design medium is **HTML/CSS/JS** — these are prototypes, not production code. Your job is to **recreate them pixel-perfectly** in whatever technology makes sense for the target codebase (React, Vue, native, whatever fits). Match the visual output; don't copy the prototype's internal structure unless it happens to fit.
-
-**Don't render these files in a browser or take screenshots unless the user asks you to.** Everything you need — dimensions, colors, layout rules — is spelled out in the source. Read the HTML and CSS directly; a screenshot won't tell you anything they don't.
-
-## Bundle contents
-
-- `README.md` — this file
-- `chats/` — conversation transcripts (read these!)
-- `project/` — the `Vocabulary Game Builder` project files (HTML prototypes, assets, components)
+Built with Vite + React. The visual design is the "Classic Library" theme
+(Spectral serif on warm manuscript paper) from the original Claude Design
+exploration, preserved in `project/` with its chat transcript in `chats/`.
