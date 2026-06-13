@@ -22,9 +22,9 @@ export function Daily({ goQuiz }) {
       <div style={{ display: "grid", gap: 16 }}>
         {list.map((w, i) => (
           <div key={w.word} style={{ background: T.surface, border: `1px solid ${T.line}`, borderRadius: T.radiusLg, padding: "26px 28px", position: "relative", overflow: "hidden" }}>
-            <span style={{ position: "absolute", top: -18, right: 10, fontFamily: T.fontHead, fontSize: 130, fontWeight: T.headWeight, color: T.lineSoft, lineHeight: 1, pointerEvents: "none", opacity: 0.7 }}>{i + 1}</span>
+            <span style={{ position: "absolute", top: -18, right: 10, fontFamily: T.fontHead, fontSize: "clamp(60px, 22vw, 130px)", fontWeight: T.headWeight, color: T.lineSoft, lineHeight: 1, pointerEvents: "none", opacity: 0.7 }}>{i + 1}</span>
             <div style={{ position: "relative" }}>
-              <h3 style={{ margin: 0, fontFamily: T.fontHead, fontWeight: T.headWeight, fontSize: 40, color: T.ink, letterSpacing: T.headLs, lineHeight: 1.05 }}>{w.word}</h3>
+              <h3 style={{ margin: 0, fontFamily: T.fontHead, fontWeight: T.headWeight, fontSize: "clamp(26px, 8vw, 40px)", color: T.ink, letterSpacing: T.headLs, lineHeight: 1.05 }}>{w.word}</h3>
               <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap", marginTop: 10 }}>
                 <SpeakButton text={w.word} size={34} />
                 <span style={{ fontFamily: T.fontBody, fontSize: 15, color: T.subSolid, fontStyle: "italic", whiteSpace: "nowrap" }}>{w.pron}</span>

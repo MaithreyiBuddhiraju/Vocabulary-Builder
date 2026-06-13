@@ -1,6 +1,6 @@
 // App shell: sticky header with brand, mode nav, and live stats.
 import React from "react";
-import { T, tint } from "./theme.js";
+import { T, tint, CLASSIC_PAPERS, applyPaper, loadPaper } from "./theme.js";
 import { GameProvider, useGame } from "./game.jsx";
 import { Ring } from "./components/ui.jsx";
 import { Daily } from "./views/Daily.jsx";
@@ -16,15 +16,56 @@ function StatItem({ label, value, accent }) {
   );
 }
 
-function Header({ mode, setMode }) {
+function SettingsPanel({ paper, onPaperChange, onClose }) {
+  const { resetAll } = useGame();
+  const keys = Object.keys(CLASSIC_PAPERS);
+  return (
+    <div style={{
+      position: "absolute", top: 60, right: 28, zIndex: 30, width: 220,
+      background: T.surface, border: `1px solid ${T.line}`, borderRadius: T.radiusLg,
+      boxShadow: "0 8px 24px rgba(0,0,0,.12)", padding: 16,
+    }}>
+      <div style={{ fontFamily: T.fontBody, fontSize: 10, letterSpacing: ".12em", textTransform: "uppercase", color: T.subSolid, fontWeight: 600, marginBottom: 10 }}>Paper</div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 9, marginBottom: 14 }}>
+        {keys.map((k) => {
+          const p = CLASSIC_PAPERS[k].tokens;
+          const on = paper === k;
+          return (
+            <button key={k} type="button" title={CLASSIC_PAPERS[k].label} onClick={() => onPaperChange(k)}
+              style={{
+                width: 36, height: 36, borderRadius: 9, cursor: "pointer", padding: 0,
+                background: p.bg, position: "relative",
+                border: on ? `2px solid ${T.ink}` : "1px solid rgba(0,0,0,.18)",
+                boxShadow: on ? "0 0 0 2px #fff inset" : "none",
+              }}>
+              <span style={{ position: "absolute", right: 5, bottom: 5, width: 12, height: 12, borderRadius: 3, background: p.surface, border: "1px solid rgba(0,0,0,.12)" }} />
+            </button>
+          );
+        })}
+      </div>
+      <div style={{ fontFamily: T.fontBody, fontSize: 10, letterSpacing: ".12em", textTransform: "uppercase", color: T.subSolid, fontWeight: 600, marginBottom: 10 }}>Progress</div>
+      <button
+        onClick={() => { if (confirm("Reset points, streak and mastery?")) { resetAll(); onClose(); } }}
+        style={{
+          fontFamily: T.fontBody, fontSize: 13, fontWeight: 600, color: T.bad,
+          background: "transparent", border: `1px solid ${T.line}`, borderRadius: 99,
+          padding: "8px 16px", cursor: "pointer", width: "100%",
+        }}>
+        Reset all progress
+      </button>
+    </div>
+  );
+}
+
+function Header({ mode, setMode, settingsOpen, setSettingsOpen, paper, onPaperChange }) {
   const { counts, state } = useGame();
   const tabs = [{ id: "daily", label: "Daily" }, { id: "library", label: "Library" }, { id: "quiz", label: "Quiz" }];
   return (
     <header style={{
-      position: "sticky", top: 0, zIndex: 20, background: tint(T.bg, 0.9),
+      position: "sticky", top: 0, zIndex: 20, background: tint(T.bg, 0.9), overflow: "visible",
       backdropFilter: "blur(10px)", borderBottom: `1px solid ${T.line}`,
     }}>
-      <div style={{ maxWidth: 1120, margin: "0 auto", padding: "0 28px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, height: 76, flexWrap: "wrap" }}>
+      <div style={{ maxWidth: 1120, margin: "0 auto", padding: "12px 28px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, minHeight: 76, flexWrap: "wrap" }}>
         {/* brand */}
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <span style={{ width: 30, height: 30, borderRadius: 7, background: T.accent, display: "grid", placeItems: "center", color: T.surface, fontFamily: T.fontHead, fontWeight: 700, fontSize: 18, flexShrink: 0 }}>L</span>
@@ -58,39 +99,35 @@ function Header({ mode, setMode }) {
             </div>
             <div style={{ fontFamily: T.fontBody, fontSize: 10, letterSpacing: ".12em", textTransform: "uppercase", color: T.subSolid, fontWeight: 600, lineHeight: 1.3 }}>Mastered<br /><span style={{ color: T.ink }}>of {counts.total}</span></div>
           </div>
+          <button aria-label="Settings" onClick={() => setSettingsOpen((o) => !o)} style={{
+            width: 36, height: 36, borderRadius: 99, border: `1px solid ${T.lineSoft}`, background: settingsOpen ? T.surface : "transparent",
+            display: "grid", placeItems: "center", cursor: "pointer", fontSize: 22, lineHeight: 1, color: T.subSolid, flexShrink: 0,
+          }}>⚙︎</button>
         </div>
       </div>
+      {settingsOpen && <SettingsPanel paper={paper} onPaperChange={onPaperChange} onClose={() => setSettingsOpen(false)} />}
     </header>
-  );
-}
-
-function Footer() {
-  const { resetAll } = useGame();
-  return (
-    <footer style={{ maxWidth: 1120, margin: "0 auto", padding: "0 28px 36px", display: "flex", justifyContent: "center" }}>
-      <button
-        onClick={() => { if (confirm("Reset points, streak and mastery?")) resetAll(); }}
-        style={{
-          fontFamily: T.fontBody, fontSize: 12, letterSpacing: ".06em", color: T.subSolid,
-          background: "transparent", border: "none", cursor: "pointer", textDecoration: "underline", opacity: 0.7,
-        }}>
-        Reset all progress
-      </button>
-    </footer>
   );
 }
 
 function Shell() {
   const [mode, setMode] = React.useState("daily");
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
+  const [paper, setPaper] = React.useState(loadPaper);
+
+  const onPaperChange = (key) => {
+    applyPaper(key);
+    setPaper(key);
+  };
+
   return (
     <div style={{ minHeight: "100vh", background: T.bg, color: T.ink, fontFamily: T.fontBody }}>
-      <Header mode={mode} setMode={setMode} />
+      <Header mode={mode} setMode={setMode} settingsOpen={settingsOpen} setSettingsOpen={setSettingsOpen} paper={paper} onPaperChange={onPaperChange} />
       <main style={{ maxWidth: 1120, margin: "0 auto", padding: "38px 28px 90px" }}>
         {mode === "daily" && <Daily goQuiz={() => setMode("quiz")} />}
         {mode === "library" && <Library />}
         {mode === "quiz" && <Quiz />}
       </main>
-      <Footer />
     </div>
   );
 }
