@@ -16,6 +16,12 @@ a usage sentence, phonetic pronunciation, synonyms/antonyms, and tap-to-hear aud
 Progress (new → learning → mastered), points, and a day-streak persist in `localStorage`.
 Audio pronunciation uses the browser's built-in speech synthesis — no setup, works offline.
 
+## Settings
+
+The gear icon in the header opens a settings panel with 6 paper-tone swatches
+(Manuscript, Linen, Sage, Mist, Blush, Fog) for the Classic Library theme, plus
+a "Reset all progress" action. The chosen paper tone persists in `localStorage`.
+
 ## Development
 
 ```sh
@@ -28,3 +34,24 @@ npm run preview  # serve the production build
 Built with Vite + React. The visual design is the "Classic Library" theme
 (Spectral serif on warm manuscript paper) from the original Claude Design
 exploration, preserved in `project/` with its chat transcript in `chats/`.
+
+## Running on your phone
+
+**On your LAN (quick):**
+
+```sh
+npm run dev -- --host
+```
+
+Open the printed `Network:` URL on your phone (same WiFi).
+
+**Installed PWA (works fully offline):**
+
+This app is a PWA — `npm run build` precaches everything (word data, audio is
+local via Web Speech API, fonts) so it runs offline once installed.
+
+The repo deploys automatically to GitHub Pages on every push to `main` (see
+`.github/workflows/deploy.yml`). Open
+`https://maithreyibuddhiraju.github.io/Vocabulary-Builder/` on your phone and
+use "Add to Home Screen" (Chrome: menu → Install app; Safari: Share → Add to
+Home Screen) to install it as a standalone app.
